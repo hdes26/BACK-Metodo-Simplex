@@ -9,7 +9,7 @@ class SimplexRouter{
         this.routes();
     }
     routes(){
-        this.router.get('/', simplexController.index);
+        this.router.get('/resolve', simplexController.resolve);
     }
 }
 const simplexRouter = new SimplexRouter();
