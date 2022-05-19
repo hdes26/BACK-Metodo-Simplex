@@ -10,12 +10,16 @@ class SimplexController{
         
         const funcObj = ['50X1', '40X2', '60X3', '0S1', '0S2', '–MA1'];
         
-        const SA = [
-            ['3X1', '8X2', '12X3', 'S1',   '' ,  ''     ,'=', '700'],
-            ['2X1', ''   , '5X3' ,   '', + 'S2',  ''    ,'=', '100'],
-            ['X2',  ''   ,    '' ,   '',    '' ,  'A1'  ,'=', '500']
-        ]
-        
+        // const SA = [
+        //     ['3X1', '8X2', '12X3', 'S1',   '' ,  ''     ,'=', '700'],
+        //     ['2X1', ''   , '5X3' ,   '', + 'S2',  ''    ,'=', '100'],
+        //     ['X2',  ''   ,    '' ,   '',    '' ,  'A1'  ,'=', '500']
+        // ]
+            const SA = [
+            ['X1', 'X2'  , '-S1',   'A1' ,  ''    , ''   ,  ''   ,'=', '700'],
+            ['X1', 'X2'  ,  ''  ,    ''  ,  '-S2' ,  'A2',  ''   ,'=', '100'],
+            ['X1', '3X2' ,  ''  ,    ''  ,  ''    ,   ''  , 'S3' ,'=', '500']
+        ] 
         const ValuesCJ = funcObj.map(x =>{
             if(x.includes('X')){
 
@@ -51,14 +55,14 @@ class SimplexController{
 
         const Ci=funcObj.map((value)=>{
             if(value.includes('S')){
-                return [ value.split('S')[0], 'S'+value.split('S')[1] ]
+                return [ value.split('S')[0], 'S'+value.split('S')[1]]
             }else if(value.includes('A')){
-                return value.split('A')
+                return [ value.split('A')[0], 'A'+value.split('A')[1] ]
             }
 
         })
         
-        console.log(Ci);
+        console.log();
 
         res.status(200).send("simplexController");
     }
