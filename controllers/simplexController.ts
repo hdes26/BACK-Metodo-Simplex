@@ -49,8 +49,16 @@ class SimplexController{
         console.log("🚀 ValuesCJ", ValuesCJ)
         console.log("🚀 indexCJ", indexCJ)
 
+        const Ci=funcObj.map((value)=>{
+            if(value.includes('S')){
+                return [ value.split('S')[0], 'S'+value.split('S')[1] ]
+            }else if(value.includes('A')){
+                return value.split('A')
+            }
 
-
+        })
+        
+        console.log(Ci);
 
         res.status(200).send("simplexController");
     }
