@@ -1,4 +1,5 @@
 import { Response, Request } from "express";
+import { cjZj, zj as funzj } from "../helper/helper";
 
 class SimplexController{
 
@@ -9,18 +10,14 @@ class SimplexController{
     resolve(req:Request, res: Response){
         
         // const funcObj = ['50X1', '40X2', '60X3', '0S1', '0S2', '–MA1'];
-        const funcObj = ['1X1', '2X2', '0S1', 'MA1', '0S2', 'MA2', '0S3'];
-        
-        // const SA = [
-        //     ['3X1', '8X2', '12X3', 'S1',   '' ,  ''     ,'=', '700'],
-        //     ['2X1', ''   , '5X3' ,   '', + 'S2',  ''    ,'=', '100'],
-        //     ['X2',  ''   ,    '' ,   '',    '' ,  'A1'  ,'=', '500']
-        // ]
-            const SA = [
-            ['X1', 'X2'  , '-S1',   'A1' ,  ''    , ''   ,  ''   ,'=', '700'],
-            ['X1', 'X2'  ,  ''  ,    ''  ,  '-S2' ,  'A2',  ''   ,'=', '100'],
-            ['X1', '3X2' ,  ''  ,    ''  ,  ''    ,   ''  , 'S3' ,'=', '500']
-        ] 
+        const funcObj = ['1X1', '2X2', '0S1','0S2','0S3', 'MA1',  'MA2', ];
+        const SA = [  
+        //  ['1X1', '2X2'  , '0S1'  ,'0S2'  ,'0S3' , 'MA1',  'MA2', ]  
+            ['1X1', '1X2'  , '-1S1' , '0'   ,  '0' , '1A1',  '0'  ,  '=' , '2' ],
+            ['1X1', '1X2'  ,  '0'   , '-1S2',  '0' ,  '0' ,  '1A2',  '=' , '3' ],
+            ['1X1', '3X2'  ,  '0'   ,  '0'  , '1S3',  '0' ,   '0' ,  '=' , '12']
+        ]
+        const operacion = 'MIN';
         const ValuesCJ = funcObj.map(x =>{
             if(x.includes('X')){
 
@@ -51,7 +48,7 @@ class SimplexController{
 
             }
         });
-        console.log("🚀 ~ file: simplexController.ts ~ line 50 ~ SimplexController ~ resolve ~ indexCJ", indexCJ)
+        // console.log("🚀 ~ file: simplexController.ts ~ line 50 ~ SimplexController ~ resolve ~ indexCJ", indexCJ)
 
         let cbAux: string[] = [];
         
@@ -76,24 +73,60 @@ class SimplexController{
         //     if
         // });
         
-        console.log(vb);
+        // console.log(vb);
 
-        const auxValue=SA.map((value)=>{
-            return value[value.length-1]
+        const auxValue: any[] = [];
+        let auxValue2: any[] = [];
+        const auxValue3: any[] = [];
+        SA.forEach((value)=>{
+        // const funcObj = ['1X1', '2X2', '0S1', 'MA1', '0S2', 'MA2', '0S3'];
+
+            // ['1X1', '1X2'  , '-1S1',   '1A1' ,  '0'    , '0'   ,  '0'   ,'=', '2'],
+            // ['1X1', '1X2'  ,  '0'  ,    '0'  ,  '-1S2' ,  '1A2',  '0'   ,'=', '3'],
+            // ['1X1', '3X2' ,  '0'  ,    '0'  ,  '0'    ,   '0'  , '1S3' ,'=', '12']
+            auxValue.push(value[value.length-1]);
+            value.forEach((item) =>{
+                // ['1X1', '1X2'  , '-1S1',   '1A1' ,  '0'    , '0'   ,  '0'   ,'=', '2']
+                if(item.includes('X')){
+                    auxValue2.push(item.split('X')[0]);
+                }else if(item.includes('S')){
+                    auxValue2.push(item.split('S')[0]);
+                }else if(item.includes('A')){
+                    auxValue2.push(item.split('A')[0]);
+                }else if(item.includes('0') ){
+                    auxValue2.push('0');
+                }
+            });
+            auxValue3.push(auxValue2);
+            auxValue2 = [];
+ 
 
         })
         vb.map((value,index)=>{
             return value?.push(auxValue[index]);
-        })
-
+        });
         
+        vb.map((value, index)=>{
+            return value?.push(...auxValue3[index]);
+        });
+        
+        // console.log(vb.filter(x => x !== undefined));
 
-        console.log(SA)
+        const zj =  funzj(vb, indexCJ);
 
+        const zj2 =  cjZj(zj, ValuesCJ);
+        console.log("🚀 ~ file: simplexController.ts ~ line 117 ~ SimplexController ~ resolve ~ zj2", zj2)
+
+        // console.log("🚀 ~ file: simplexController.ts ~ line 122 ~ SimplexController ~ resolve ~ zj", zj)
+        // mas positiva cuando sea maximizar y mas negativa cuando sea minimizar 
+        
+        // para señalar la columna pivote nos vasamos en cj  y para identificar en las restricciones sumamos 3, para las zj sumamos 1
+        
         res.status(200).send("simplexController");
     }
+    
     
 }
 const simplexController:SimplexController =  new SimplexController();
 
-export default simplexController;
+export default simplexController; 
