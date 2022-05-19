@@ -1,5 +1,5 @@
 import { Router, Response, Request } from "express";
-import userController from "../controllers/userController";
+import SimplexController from "../controllers/simplexController";
 class UserRouter{
     
     router: Router;
@@ -9,7 +9,7 @@ class UserRouter{
         this.routes();
     }
     routes(){
-        // this.router.get('/', userController);
+        this.router.get('/', SimplexController.index);
     }
 }
 const userRouter = new UserRouter();
