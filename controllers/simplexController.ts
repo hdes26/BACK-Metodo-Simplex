@@ -16,6 +16,39 @@ class SimplexController{
             ['X2',  ''   ,    '' ,   '',    '' ,  'A1'  ,'=', '500']
         ]
         
+        const ValuesCJ = funcObj.map(x =>{
+            if(x.includes('X')){
+
+                return x.split('X')[0];
+
+            }else if( x.includes('S')){
+
+                return x.split('S')[0];
+
+            }else if(x.includes('A')){
+
+                return x.split('A')[0];
+
+            }
+        });
+        const indexCJ = funcObj.map(x =>{
+            if(x.includes('X')){
+
+                return 'X' + x.split('X')[1];
+
+            }else if( x.includes('S')){
+
+                return  'S' + x.split('S')[1];
+
+            }else if(x.includes('A')){
+
+                return 'A' + x.split('A')[1];
+
+            }
+        });
+        console.log("🚀 ValuesCJ", ValuesCJ)
+        console.log("🚀 indexCJ", indexCJ)
+
 
 
 
