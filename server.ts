@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import {config as dotenvConfig} from "dotenv";
 // routers
-import userRouter from './routes/user';
+import SimplexRouter from './routes/simplex';
 class Server {
     public app: express.Application;
     constructor() {
@@ -21,7 +21,7 @@ class Server {
         
     }
     routes(){
-        this.app.use('/api/user',userRouter); 
+        this.app.use('/api',SimplexRouter); 
     }
 
     start(){
