@@ -78,6 +78,18 @@ class SimplexController{
         
         console.log(vb);
 
+        const auxValue=SA.map((value)=>{
+            return value[value.length-1]
+
+        })
+        vb.map((value,index)=>{
+            return value?.push(auxValue[index]);
+        })
+
+        
+
+        console.log(SA)
+
         res.status(200).send("simplexController");
     }
     
