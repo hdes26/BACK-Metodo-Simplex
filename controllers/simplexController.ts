@@ -8,7 +8,8 @@ class SimplexController{
     }
     resolve(req:Request, res: Response){
         
-        const funcObj = ['50X1', '40X2', '60X3', '0S1', '0S2', '–MA1'];
+        // const funcObj = ['50X1', '40X2', '60X3', '0S1', '0S2', '–MA1'];
+        const funcObj = ['1X1', '2X2', '0S1', 'MA1', '0S2', 'MA2', '0S3'];
         
         const SA = [
             ['3X1', '8X2', '12X3', 'S1',   '' ,  ''     ,'=', '700'],
@@ -46,19 +47,32 @@ class SimplexController{
 
             }
         });
-        console.log("🚀 ValuesCJ", ValuesCJ)
-        console.log("🚀 indexCJ", indexCJ)
+        console.log("🚀 ~ file: simplexController.ts ~ line 50 ~ SimplexController ~ resolve ~ indexCJ", indexCJ)
 
-        const Ci=funcObj.map((value)=>{
-            if(value.includes('S')){
-                return [ value.split('S')[0], 'S'+value.split('S')[1] ]
-            }else if(value.includes('A')){
-                return value.split('A')
-            }
-
-        })
+        let cbAux: string[] = [];
         
-        console.log(Ci);
+        const vb = funcObj.map((value)=>{
+            if(value.includes('S')){
+                // si tiene un artificial y una de olgura se escoje la artificial 
+                const artificial = funcObj.filter((x)=>x.includes('MA'+value.split('S')[1]));                
+                if(artificial.length > 0){
+                    cbAux.push(artificial[0]);
+                    return [ artificial[0].split('A')[0], 'A'+artificial[0].split('A')[1] ]    
+                }
+                return [ value.split('S')[0], 'S'+value.split('S')[1] ];
+                
+            }else if(value.includes('A')){
+                // validar si la variable artificial ya entro 
+                if(!cbAux.includes(value)){
+                    return [ value.split('A')[0], 'A'+value.split('A')[1] ];
+                }
+            }
+        }).filter(x => x !== undefined);
+        // const variablesElegidas = variblesArtificiales.map(x => {
+        //     if
+        // });
+        
+        console.log(vb);
 
         res.status(200).send("simplexController");
     }
