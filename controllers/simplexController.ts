@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { cjZj, zj as funzj } from "../helper/helper";
+import { cjZj as funCjZj, createTable, identificarColumnaPivote, tetaSubi,filaPivoteDividida, zj as funzj, createTableN } from "../helper/helper";
 
 class SimplexController{
 
@@ -9,13 +9,19 @@ class SimplexController{
     }
     resolve(req:Request, res: Response){
         
-        // const funcObj = ['50X1', '40X2', '60X3', '0S1', '0S2', '–MA1'];
-        const funcObj = ['1X1', '2X2', '0S1','0S2','0S3', 'MA1',  'MA2', ];
+        // const funcObj = ['1X1', '2X2', '0S1','0S2','0S3', 'MA1',  'MA2', ];
+        const funcObj = ['100X1', '50X2' , '210X3', '0S1' , '0S2','MA1' ,'MA2'];
+        
         const SA = [  
-        //  ['1X1', '2X2'  , '0S1'  ,'0S2'  ,'0S3' , 'MA1',  'MA2', ]  
-            ['1X1', '1X2'  , '-1S1' , '0'   ,  '0' , '1A1',  '0'  ,  '=' , '2' ],
-            ['1X1', '1X2'  ,  '0'   , '-1S2',  '0' ,  '0' ,  '1A2',  '=' , '3' ],
-            ['1X1', '3X2'  ,  '0'   ,  '0'  , '1S3',  '0' ,   '0' ,  '=' , '12']
+            // ['1X1', '1X2'  , '-1S1' , '0'   ,  '0' , '1A1',  '0'  ,  '=' , '2' ],
+            // ['1X1', '1X2'  ,  '0'   , '-1S2',  '0' ,  '0' ,  '1A2',  '=' , '3' ],
+            // ['1X1', '3X2'  ,  '0'   ,  '0'  , '1S3',  '0' ,   '0' ,  '=' , '12']
+
+
+            // ['1X1', '1X2'  , '-1S1' , '0'   ,  '0' , '1A1',  '0'  ,  '=' , '2' ],
+            ['25X1' ,'10X2' , '30X3', '-1S1', '0' ,  '1A1', '0',   "=", "1000"],
+            ['40X1', '18X2' , '60X3', '0'  , '-1S2' ,'0',  '1A2',  '=' ,'500']
+
         ]
         const operacion = 'MIN';
         const ValuesCJ = funcObj.map(x =>{
@@ -48,11 +54,12 @@ class SimplexController{
 
             }
         });
-        // console.log("🚀 ~ file: simplexController.ts ~ line 50 ~ SimplexController ~ resolve ~ indexCJ", indexCJ)
+        //console.log("🚀 ~ file: simplexController.ts ~ line 50 ~ SimplexController ~ resolve ~ indexCJ", indexCJ)
 
         let cbAux: string[] = [];
         
         const vb = funcObj.map((value)=>{
+            console.log(value);
             if(value.includes('S')){
                 // si tiene un artificial y una de olgura se escoje la artificial 
                 const artificial = funcObj.filter((x)=>x.includes('MA'+value.split('S')[1]));                
@@ -110,19 +117,73 @@ class SimplexController{
             return value?.push(...auxValue3[index]);
         });
         
-        // console.log(vb.filter(x => x !== undefined));
+        console.log(vb.filter(x => x !== undefined));
 
         const zj =  funzj(vb, indexCJ);
 
-        const zj2 =  cjZj(zj, ValuesCJ);
-        console.log("🚀 ~ file: simplexController.ts ~ line 117 ~ SimplexController ~ resolve ~ zj2", zj2)
+        const cjzj =  funCjZj(zj, ValuesCJ);
+        // console.log("🚀 ~ file: simplexController.ts ~ line 117 ~ SimplexController ~ resolve ~ cjzj", cjzj)
 
         // console.log("🚀 ~ file: simplexController.ts ~ line 122 ~ SimplexController ~ resolve ~ zj", zj)
         // mas positiva cuando sea maximizar y mas negativa cuando sea minimizar 
+        let {pivote, optima} = identificarColumnaPivote(cjzj, operacion);
+        let isOptima:boolean = optima;
+        // console.log("🚀 ~ file: simplexController.ts ~ line 123 ~ SimplexController ~ resolve ~ Columna pivote", pivote)
+        const teta = tetaSubi(vb, pivote);
+        // console.log("🚀 ~ file: simplexController.ts ~ line 125 ~ SimplexController ~ resolve ~ Fila pivote", teta.filaPivote)
+        const arrayTables:any = []
+        // armar primera tabla
+        const tabla1 = createTable(vb, ValuesCJ, zj, cjzj, teta,indexCJ);
+        // console.log("🚀 ~ file: simplexController.ts ~ line 136 ~ SimplexController ~ resolve ~ vb", vb)
+        arrayTables.push(tabla1);
+        console.log("🚀 ~ file: simplexController.ts ~ line 129 ~ SimplexController ~ resolve ~ tabla1", tabla1)
+        // console.log("🚀 ~ file: simplexController.ts ~ line 123 ~ SimplexController ~ resolve ~ optima", optima);
+        const newFilaPivote=filaPivoteDividida(tabla1,teta.filaPivote,pivote);
+        // console.log("🚀 ~ file: simplexController.ts ~ line 131 ~ SimplexController ~ resolve ~ newFilaPivote", newFilaPivote)
+        const granCeldaPivote= tabla1[2+teta.filaPivote][3+pivote];
+        // console.log("🚀 ~ file: simplexController.ts ~ line 131 ~ SimplexController ~ resolve ~ newFilaPivote", newFilaPivote)
+        // let celdaPivote  = tabla1[teta.filaPivote+3][pivote+4];
+        // console.log("🚀 ~ file: simplexController.ts ~ line 132 ~ SimplexController ~ resolve ~ celdaPivote", celdaPivote)
+        //let isOptima:boolean = verifyTableOptima(cjzj,operacion);
+        // const tableN=createTableN(tabla1, newFilaPivote, teta.filaPivote, granCeldaPivote, operacion);
+        // arrayTables.push(tableN.tabla1);
+        // while(){
+            
+        // }
+        // if(optima){
+        // res.status(200).send(arrayTables.length);
+
+        // }
+        const tableN=createTableN(tabla1, newFilaPivote, teta.filaPivote, granCeldaPivote, operacion,pivote);
+        arrayTables.push(tableN.tabla1);
+
+        // [
+        //     [  null g, null, 'CJ', '1', '2',  '0',  '0',  '0', 'M',  'M',  null ],
         
+        //     [  'CI' g, 'VB', 'BI','X1', 'X2', 'S1', 'S2', 'S3', 'A1', 'A2', 'θ'],
+
+        //     [  '1', 'X1', '1',  '1', '1', '-2', '1',  '0', '2', '-1', '-1' ],
+
+        //     [  '0',  'S1', '1',  '0', '0',  '1',  '-1', '0', '-1', '1',  '1' ],
+
+        //     [  '0', 'S3', '9',  '0','2', '0',  '1',  '1','0', '-1', '-9'],
+
+        //     [  null, 'ZJ', '1', '1',  '1',  '-2', '1',  '0',  '2', '-1', null ],
+
+        //     [  null,     'CJ - ZJ','~','1  - 1','1  - 2', '-2  - 0','1  - 0', '0  - 0','- 2 ',   '-1  - m',null  ]
+        
+        //   ]
+        // @ts-ignore
+        
+        // console.log("🚀 ~ file: simplexController.ts ~ line 154 ~ SimplexController ~ resolve ~ tableN2.tabla1", tableN2.tabla1)
+        while (!isOptima){
+            const tableN2=createTableN(tableN.tabla1, tableN.newFilaPivote, tableN.filaPivote, tableN.granCeldaPivote, operacion,tableN.pivote);            
+            isOptima = tableN2.optima;
+            arrayTables.push(tableN2.tabla1);
+        };
         // para señalar la columna pivote nos vasamos en cj  y para identificar en las restricciones sumamos 3, para las zj sumamos 1
         
-        res.status(200).send("simplexController");
+        res.status(200).send(arrayTables);
     }
     
     
