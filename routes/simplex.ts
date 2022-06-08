@@ -9,7 +9,7 @@ class SimplexRouter{
         this.routes();
     }
     routes(){
-        this.router.get('/resolve', simplexController.resolve);
+        this.router.post('/resolve', simplexController.resolve);
     }
 }
 const simplexRouter = new SimplexRouter();
