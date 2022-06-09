@@ -11,7 +11,7 @@ class SimplexRouter {
         this.routes();
     }
     routes() {
-        this.router.get('/resolve', simplexController_1.default.resolve);
+        this.router.post('/resolve', simplexController_1.default.resolve);
     }
 }
 const simplexRouter = new SimplexRouter();

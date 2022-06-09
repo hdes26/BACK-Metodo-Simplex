@@ -203,7 +203,6 @@ export function createTable(
   table.push([null, "CJ - ZJ", "~", ...cjZj, null]);
 
 
-
   return table;
   // [
   // [  null    ,  null  ,    "CJ"      ,  "1"         ,  "2"    ,  "0"    , "0"    ,    "0"  ,     "M"   ,     "M"          , null   ],
@@ -216,21 +215,21 @@ export function createTable(
   //]
 }
 export function filaPivoteDividida(
-  tabla: any[],
+  tablaDiv: any[],
   filaPivote: number,
   columnaPivote: number
 ) {
-  const granCeldaPivote = tabla[2 + filaPivote][3 + columnaPivote];
+  const granCeldaPivote = tablaDiv[2 + filaPivote][3 + columnaPivote];
 
   let auxFilaPivote: any[] = [];
   
-  tabla.map((value, i) => {
+  tablaDiv.forEach((value, i) => {
     if(i === 1){
-        auxFilaPivote.push(tabla[0][3 + columnaPivote])
-        auxFilaPivote.push(tabla[1][3 + columnaPivote])
+        auxFilaPivote.push(tablaDiv[0][3 + columnaPivote])
+        auxFilaPivote.push(tablaDiv[1][3 + columnaPivote])
     }
     if (filaPivote + 2 == i) {
-      value.map((celda: string, j: number) => {
+      value.forEach((celda: string, j: number) => {
         if (j >= 2) {
           if (value.length - 1 >= j) {
             if (celda == "0") {
@@ -252,17 +251,17 @@ export function filaPivoteDividida(
 }
 
 export function algoritmoN(
-  tabla: any[],
+  tablaN2: any[],
   filaPivoteDivida: any[],
   filaPivote: number,
   columnaPivote: number
 ) {
   let valueNewTable: any = [];
   
-  tabla.map((item, index) => {
-    if (index >= 2 && index - 2 !== filaPivote && index < tabla.length - 2) {
+  tablaN2.forEach((item, index) => {
+    if (index >= 2 && index - 2 !== filaPivote && index < tablaN2.length - 2) {
       const itemAux: any = [];
-      item.map((celda: string, i: number) => {
+      item.forEach((celda: string, i: number) => {
         if(i === 1 || i === 0){
             itemAux.push(item[i])
         } 
@@ -287,7 +286,7 @@ export function algoritmoN(
 }
 
 export function createTableN(
-  tabla: any[],
+  tablaN: any[],
   filaPivoteDivida: any[],
   filaPivote: number,
   granCeldaPivote: number,
@@ -295,20 +294,20 @@ export function createTableN(
   columnaPivote: any
 ) {
 
-  const newValues = algoritmoN(tabla, filaPivoteDivida, filaPivote, columnaPivote);
+  const newValues = algoritmoN(tablaN, filaPivoteDivida, filaPivote, columnaPivote);
  
 
 
     filaPivoteDivida.pop()
-  tabla[filaPivote+2] = filaPivoteDivida;
+    tablaN[filaPivote+2] = filaPivoteDivida;
   newValues.map( (item:any) =>{
-    tabla[item.index] = item.newValue;
+    tablaN[item.index] = item.newValue;
   });
 
   let aux:any=[];
   let auxVB:any=[];
   let auxCj:any=[];
-  tabla.map((value,index)=>{
+  tablaN.map((value,index)=>{
    if(index==1){
     value.map((item:any,index:number)=>{
       if(index>=3 && value.length-1>index){
@@ -316,7 +315,7 @@ export function createTableN(
       };
     });
    }
-   if(index>=2 &&  index < tabla.length - 2){
+   if(index>=2 &&  index < tablaN.length - 2){
      auxVB.push(value);
    }
    if(index === 0){

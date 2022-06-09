@@ -131,7 +131,7 @@ class SimplexController{
         const tabla1 = createTable(vb, ValuesCJ, zj, cjzj, teta,indexCJ);
         // console.log("🚀 ~ file: simplexController.ts ~ line 136 ~ SimplexController ~ resolve ~ vb", vb)
         arrayTables.push({
-            table:tabla1,
+            table:[...tabla1],
             pivoteX:teta.filaPivote+2,
             pivoteY:pivote+3
         });
@@ -155,7 +155,7 @@ class SimplexController{
         // }
         const tableN=createTableN(tabla1, newFilaPivote, teta.filaPivote, granCeldaPivote, operacion,pivote);
         arrayTables.push({
-            table:tableN.tabla1,
+            table:[...tableN.tabla1],
             pivoteX:tableN.filaPivote+2,
             pivoteY:tableN.pivote+3
         });
@@ -183,7 +183,7 @@ class SimplexController{
             const tableN2=createTableN(tableN.tabla1, tableN.newFilaPivote, tableN.filaPivote, tableN.granCeldaPivote, operacion,tableN.pivote);            
             isOptima = tableN2.optima;
             arrayTables.push({
-                table:tableN2.tabla1,
+                table:[...tableN2.tabla1],
                 pivoteX:tableN2.pivote+2,
                 pivoteY:tableN2.filaPivote+3
             });

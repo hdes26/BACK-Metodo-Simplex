@@ -183,16 +183,16 @@ function createTable(vb, cj, zj, cjZj, { teta, filaPivote }, indexCJ) {
     //]
 }
 exports.createTable = createTable;
-function filaPivoteDividida(tabla, filaPivote, columnaPivote) {
-    const granCeldaPivote = tabla[2 + filaPivote][3 + columnaPivote];
+function filaPivoteDividida(tablaDiv, filaPivote, columnaPivote) {
+    const granCeldaPivote = tablaDiv[2 + filaPivote][3 + columnaPivote];
     let auxFilaPivote = [];
-    tabla.map((value, i) => {
+    tablaDiv.forEach((value, i) => {
         if (i === 1) {
-            auxFilaPivote.push(tabla[0][3 + columnaPivote]);
-            auxFilaPivote.push(tabla[1][3 + columnaPivote]);
+            auxFilaPivote.push(tablaDiv[0][3 + columnaPivote]);
+            auxFilaPivote.push(tablaDiv[1][3 + columnaPivote]);
         }
         if (filaPivote + 2 == i) {
-            value.map((celda, j) => {
+            value.forEach((celda, j) => {
                 if (j >= 2) {
                     if (value.length - 1 >= j) {
                         if (celda == "0") {
@@ -212,12 +212,12 @@ function filaPivoteDividida(tabla, filaPivote, columnaPivote) {
     return auxFilaPivote;
 }
 exports.filaPivoteDividida = filaPivoteDividida;
-function algoritmoN(tabla, filaPivoteDivida, filaPivote, columnaPivote) {
+function algoritmoN(tablaN2, filaPivoteDivida, filaPivote, columnaPivote) {
     let valueNewTable = [];
-    tabla.map((item, index) => {
-        if (index >= 2 && index - 2 !== filaPivote && index < tabla.length - 2) {
+    tablaN2.forEach((item, index) => {
+        if (index >= 2 && index - 2 !== filaPivote && index < tablaN2.length - 2) {
             const itemAux = [];
-            item.map((celda, i) => {
+            item.forEach((celda, i) => {
                 if (i === 1 || i === 0) {
                     itemAux.push(item[i]);
                 }
@@ -236,17 +236,17 @@ function algoritmoN(tabla, filaPivoteDivida, filaPivote, columnaPivote) {
     return valueNewTable;
 }
 exports.algoritmoN = algoritmoN;
-function createTableN(tabla, filaPivoteDivida, filaPivote, granCeldaPivote, operacion, columnaPivote) {
-    const newValues = algoritmoN(tabla, filaPivoteDivida, filaPivote, columnaPivote);
+function createTableN(tablaN, filaPivoteDivida, filaPivote, granCeldaPivote, operacion, columnaPivote) {
+    const newValues = algoritmoN(tablaN, filaPivoteDivida, filaPivote, columnaPivote);
     filaPivoteDivida.pop();
-    tabla[filaPivote + 2] = filaPivoteDivida;
+    tablaN[filaPivote + 2] = filaPivoteDivida;
     newValues.map((item) => {
-        tabla[item.index] = item.newValue;
+        tablaN[item.index] = item.newValue;
     });
     let aux = [];
     let auxVB = [];
     let auxCj = [];
-    tabla.map((value, index) => {
+    tablaN.map((value, index) => {
         if (index == 1) {
             value.map((item, index) => {
                 if (index >= 3 && value.length - 1 > index) {
@@ -255,7 +255,7 @@ function createTableN(tabla, filaPivoteDivida, filaPivote, granCeldaPivote, oper
                 ;
             });
         }
-        if (index >= 2 && index < tabla.length - 2) {
+        if (index >= 2 && index < tablaN.length - 2) {
             auxVB.push(value);
         }
         if (index === 0) {
